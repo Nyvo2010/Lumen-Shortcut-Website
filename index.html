@@ -225,8 +225,12 @@
   *{box-shadow:none!important;text-shadow:none!important}
   
   /* Feature box text follows the hierarchy */
-  .feature-box h2{margin:0 0 8px 0}
+  .feature-box h2{margin:0 0 12px 0}
+  .feature-box h1{margin:0 0 12px 0}
   .feature-box p{margin:0}
+  .feature-box p + p{margin-top:12px}
+  .feature-box h1 + p{margin-top:12px}
+  .feature-box h2 + p{margin-top:12px}
   .feature-box--primary{background:linear-gradient(135deg,#A391FA 0%,#147EFC 100%);color:#fff}
   /* Use GeminiOnGradient image as the primary feature background when available. Include a dark overlay for contrast. */
   .feature-box--primary{
@@ -296,7 +300,7 @@
     bottom:0;
     background-image:url('./images/IntergrationMockup.png');
     background-size:contain;
-    background-position:center bottom 20px;
+    background-position:center bottom;
     background-repeat:no-repeat;
     opacity:1;
     z-index:0;
@@ -394,9 +398,9 @@
 
   .feature-box--primary h1{
     color:#fff;
-    margin:0;
+    margin:0 0 12px 0;
   }
-  .feature-box--primary p{color:rgba(255,255,255,0.95)}
+  .feature-box--primary p{color:rgba(255,255,255,0.95);margin:0}
   /* Responsive adjustments */
   @media (min-width:1201px){
     .feature-box--integration{min-height:600px}
@@ -416,15 +420,18 @@
   @media (max-width:720px){
     h1, .section__heading h1, .site-header .site-title{font-size:1.6rem}
     .features__grid{flex-direction:column}
-    .feature-box{min-height:220px}
-    .feature-box--primary{min-height:360px}
-    .feature-box--primary h2{top:20px;left:20px}
+    .feature-box{min-height:220px;padding:20px}
+    .feature-box--primary{min-height:480px;padding:28px;padding-top:80px}
+    .feature-box--primary h2{top:28px;left:28px}
+    .feature-box--secondary{padding:20px;padding-top:64px}
+    .feature-box--secondary h2{top:20px;left:20px}
+    .feature-box--integration{min-height:520px;padding:20px;padding-top:64px}
     .feature-box--integration h2{top:20px;left:20px}
-    .feature-box--integration{min-height:520px}
     :root{--page-gap:20px}
   }
   @media (max-width:520px){
     :root{--page-gap:12px}
+    .feature-box--primary{min-height:720px;padding-top:80px}
     .feature-box--integration{min-height:480px}
   }
     </style>
@@ -441,7 +448,7 @@
           <img class="page-hero__image" src="./images/Website%20Hero.png" alt="Hero image">
           <p class="site-subtitle">Lumen brings intelligent control to everything you do. Modular by design, it adapts instantly — understanding your words, connecting your tools, and acting the moment you ask.</p>
           <div style="margin-top:20px">
-            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/08ceafb14799407d99b0847b3d4e070b" target="_blank" rel="noopener noreferrer">Install Lumen</a>
+            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/08e0c82c82b7430da3eb445b5ef8f5e9" target="_blank" rel="noopener noreferrer">Install Lumen</a>
           </div>
         </header>
       </div>
@@ -487,7 +494,7 @@
         <div class="features__grid" style="margin-top:24px">
           <div class="feature-box feature-box--integration" role="article">
             <h2>Connected with iOS</h2>
-            <p style="margin-top:12px;color:#86868B">Lumen integrates deeply with iOS, blending right into your everyday flow. Use the Share Sheet to send anything directly to your assistant, or pull in content straight from the clipboard.</p>
+            <p>Lumen integrates deeply with iOS, blending right into your everyday flow. Use the Share Sheet to send anything directly to your assistant, or pull in content straight from the clipboard.</p>
           </div>
           <div class="feature-box feature-box--primary feature-box--purple" role="article">
             <h2>Native and Secure</h2>
@@ -506,7 +513,7 @@
           </div>
           <h1 class="site-title">Yours, truly.</h1>
           <div style="margin-top:20px">
-            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/08ceafb14799407d99b0847b3d4e070b" target="_blank" rel="noopener noreferrer">Install Lumen</a>
+            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/08e0c82c82b7430da3eb445b5ef8f5e9" target="_blank" rel="noopener noreferrer">Install Lumen</a>
           </div>
         </header>
       </div>
@@ -530,7 +537,7 @@
           <div class="footer-category">
             <h3>Shortcuts</h3>
             <div class="link-column" style="display:flex;flex-direction:column;gap:6px;">
-              <a class="footer-link" href="https://www.icloud.com/shortcuts/08ceafb14799407d99b0847b3d4e070b" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Install Lumen</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/08e0c82c82b7430da3eb445b5ef8f5e9" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Install Lumen</a>
               <a class="footer-link" href="https://www.icloud.com/shortcuts/2345863defd64e86b268e5afd43b17d4" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">General Context Server</a>
               <a class="footer-link" href="https://www.icloud.com/shortcuts/d1a6d7a4f6364889b5f6f48f51a7a988" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Weather Server</a>
               <a class="footer-link" href="https://www.icloud.com/shortcuts/4bbc5766668e4b039e8fc2634c6fc925" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Mail Server</a>
