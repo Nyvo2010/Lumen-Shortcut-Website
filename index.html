@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lumen - Yours, truly.</title>
+    <meta name="description" content="Lumen brings intelligent control to everything you do. Modular by design, it adapts instantly — understanding your words, connecting your tools, and acting the moment you ask." />
+    <meta name="keywords" content="Lumen, AI assistant, Gemini API, iOS Shortcuts, intelligent automation, SMCP, MCP" />
+    <meta name="author" content="Lumen" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yourdomain.com/" />
+    <meta property="og:title" content="Lumen - Yours, truly." />
+    <meta property="og:description" content="Lumen brings intelligent control to everything you do. Modular by design, it adapts instantly — understanding your words, connecting your tools, and acting the moment you ask." />
+    <meta property="og:image" content="./images/Website%20Hero.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://yourdomain.com/" />
+    <meta property="twitter:title" content="Lumen - Yours, truly." />
+    <meta property="twitter:description" content="Lumen brings intelligent control to everything you do. Modular by design, it adapts instantly — understanding your words, connecting your tools, and acting the moment you ask." />
+    <meta property="twitter:image" content="./images/Website%20Hero.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./images/logo.fill.png" />
+    <style>
+  /* Design tokens based on guidelines.md */
+  :root{
+    --body-font: 'SF Pro Display', 'SF Pro Text', -apple-system, system-ui, 'San Francisco', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --text-color:#1D1D1F; /* near-black */
+    --muted:#6E6E73; /* gray secondary */
+    --accent:#006EE6; /* safari blue accent */
+    --body-size:0.8rem; /* ~21.6px with current base */
+    --gap:4px;
+    --page-gap:96px; /* increased overall spacing */
+    --space-xxs:4px; --space-xs:8px; --space-s:16px; --space-m:32px; --space-l:48px; --space-xl:80px; --space-xxl:120px;
+  }
+
+  /* Base layout + type scale (keeps the original rem base so existing sizes remain proportional) */
+  html{font-size:27px}
+  html,body{height:100%;margin:0;font-family:var(--body-font);background:#FAFAFA;color:var(--text-color)}
+  body{line-height:1.45}
+  .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 var(--page-gap)}
+
+  /* Logo loop container - respects page gap */
+  /* Logo loop container now sits inside a white feature box; remove visual fades */
+  .logo-loop{width:calc(min(1200px,94vw) - (var(--page-gap) * 2));overflow:hidden;position:relative;margin-top:var(--space-l);margin-bottom:var(--space-xl)}
+  .logo-loop::before, .logo-loop::after{display:none}
+
+  /* Rewritten loop spacing system with fixed vertical distances */
+  .layer{display:flex;align-items:center;will-change:transform;margin:0;padding:0;line-height:0;position:absolute;left:0;right:0}
+  .track{display:flex;flex-wrap:nowrap}
+  .track, .logoloop__list{line-height:0}
+
+  .logo{width:160px;height:160px;flex:0 0 auto;display:flex;position:relative;align-items:center;justify-content:center;overflow:visible;transition:transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94);margin:0}
+  .logo img{width:100%;height:100%;display:block;pointer-events:none;transition:transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94)}
+  .logo:hover{transform:scale(1.06);z-index:999}
+
+  /* Fixed vertical positioning - layers stay at exact pixel positions */
+  .layer--front{position:absolute;z-index:3;top:0px}
+  .layer--middle{position:absolute;z-index:2;top:106px}
+  .layer--back{position:absolute;z-index:1;top:212px;opacity:0.95}
+  .track{will-change:transform}
+  .logoloop__list{padding:0;margin:0;display:flex}
+  
+  /* Container needs to accommodate all three layers at fixed positions */
+  .logo-loop{height:372px;position:relative}
+
+  @media (prefers-reduced-motion:reduce){.track{transform:translate3d(0,0,0)!important}.logo,.logo img{transition:none!important}}
+
+  /* Header / Hero (follow hero pattern in guidelines) */
+  .page-hero{display:flex;flex-direction:column;align-items:center;gap:var(--space-m);max-width:800px;padding:var(--space-xxl) 16px;min-height:100vh;box-sizing:border-box}
+  .site-header{width:100%;text-align:center;margin-bottom:0}
+  .site-header .eyebrow{font-size:var(--body-size);color:#000;font-family:var(--body-font);font-weight:600;letter-spacing:0.02em;margin-bottom:12px}
+  .site-header .site-title{margin:0;font-size:2.2rem;font-weight:600;line-height:1.05;color:#000;letter-spacing:-0.015em}
+  .site-header .site-subtitle{margin:16px auto 0;color:#86868B;font-size:var(--body-size);font-weight:400;max-width:56ch;line-height:1.5}
+  .page-hero__image{width:100%;max-width:640px;height:auto;margin:28px 0;border-radius:18px;object-fit:cover}
+  @media (max-width:720px){.site-header .site-title{font-size:2.1rem}.page-hero__image{max-width:92vw}}
+
+  /* Buttons (from guidelines.md) */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;cursor:pointer;text-decoration:none;font-family:'SF Pro Text', var(--body-font);font-weight:400;transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),background-color 0.2s,font-color 0.2s;font-size:calc(0.7rem - 4px);line-height:1}
+  .btn:active{transform:scale(0.98)}
+  /* pill-shaped primary */
+  .btn--primary{background:var(--accent);color:#fff;padding:6px 16px;border-radius:999px;min-height:28px}
+  /* lighten on hover instead of darkening */
+  .btn--primary:hover{background:color-mix(in srgb, var(--accent) 86%, white 14%)}
+  .btn:focus-visible{outline:3px solid rgba(0,110,230,0.18);outline-offset:4px;border-radius:999px}
+
+  /* Footer tweaks: make footer text 2/3 size and underline links on hover */
+  .footer-inner { width:100%; box-sizing:border-box; }
+  .footer-content { font-size: calc(var(--body-size) * 0.66); max-width:980px; margin:0 auto; padding:0 24px; box-sizing:border-box; }
+  .footer-link { text-decoration: none; }
+  .footer-link:hover, .footer-link:focus { text-decoration: underline !important; }
+  .footer-content h3 { font-size: inherit; color: #000; font-weight: 600; margin: 0 0 8px 0; }
+
+  /* Logos: slightly larger on wide screens with fixed layer positions */
+  .logo{width:200px;height:200px}
+  .layer--middle{top:120px}
+  .layer--back{top:240px}
+  .logo-loop{height:440px}
+  
+  @media (max-width:900px){
+    .logo{width:170px;height:170px}
+    .layer--middle{top:109px}
+    .layer--back{top:218px}
+    .logo-loop{height:388px}
+  }
+  @media (max-width:520px){
+    .logo{width:150px;height:150px}
+    .layer--middle{top:102px}
+    .layer--back{top:204px}
+    .logo-loop{height:354px}
+  }
+
+  /* Sections and features (spacing system applied) */
+  .section{width:100%;max-width:980px;padding:40px 24px;box-sizing:border-box;margin:0 auto}
+  .section__heading{ text-align:left;margin-bottom:12px}
+  
+  /* h1: Main headings - big, semibold, #000 */
+  h1, .section__heading h1{font-size:2.2rem;margin:0;font-weight:600;color:#000;letter-spacing:-0.015em;line-height:1.05}
+  
+  /* h2: Smaller headings - body-sized, semibold, #000 */
+  h2, .section__heading h2{font-size:var(--body-size);margin:0;font-weight:600;color:#000;line-height:1.4}
+  
+  /* Body text - same size as h2, regular, #86868B */
+  p, .section__lead{margin:0;color:#86868B;font-family:var(--body-font);font-weight:400;font-size:var(--body-size);line-height:1.5}
+  .section__lead{margin-top:12px;text-align:left;max-width:76ch}
+
+  /* Inline blue text link matching primary accent but styled as body text */
+  .text-link-accent{color:var(--accent);text-decoration:none;cursor:pointer;font-size:var(--body-size);font-family:var(--body-font);font-weight:400}
+  .text-link-accent:hover{text-decoration:underline}
+
+  .features__grid{display:flex;gap:20px;margin:0 auto;width:100%;box-sizing:border-box;align-items:stretch}
+  /* ensure smaller feature boxes also have spacing above them to match the wide box */
+  .features__grid > .feature-box{margin-top:40px}
+  /* Make boxes taller and use flex so we can vertically center content in the primary box */
+  .feature-box{flex:1;background:#FFFFFF;border-radius:18px;padding:28px;border:none;display:flex;flex-direction:column;justify-content:flex-start}
+  /* Keep aspect ratio for small boxes (not wide or primary) - taller vertical ratio */
+  .feature-box:not(.feature-box--wide):not(.feature-box--primary):not(.feature-box--integration){aspect-ratio:3/4;min-height:340px}
+  /* Make the last row boxes (integration and native) less tall, but let integration extend when needed */
+  .feature-box--integration{aspect-ratio:auto;min-height:520px}
+  .feature-box--primary.feature-box--purple{aspect-ratio:1/1;min-height:300px}
+  /* Use ToolsIcons.png as the background for the secondary feature box */
+  .feature-box--secondary{
+    position:relative;overflow:hidden;border-radius:18px;background-color:#FFF;
+    /* ensure flow content sits below the pinned subheading; nudged down slightly */
+    padding-top:64px;
+  }
+  .feature-box--secondary::before{
+    content:'';position:absolute;inset:0;background-image:url('./images/ToolsIcons.png');background-size:cover;background-position:center bottom;background-repeat:no-repeat;opacity:1;z-index:0;filter:contrast(1.02) saturate(1.02);transform:scale(1.02)
+  }
+  .feature-box--secondary::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.6));z-index:2;pointer-events:none;opacity:0;transition:opacity 450ms cubic-bezier(0.25,0.46,0.45,0.94)}
+  /* default inner content should sit underneath the overlay so it can appear from behind as the overlay fades */
+  .feature-box--secondary *{position:relative;z-index:1}
+  /* Keep the subheading pinned top-left and always visible above overlays/text */
+  .feature-box--secondary h2{position:absolute;top:28px;left:28px;margin:0;z-index:6}
+  
+  /* Secondary box toggle icon */
+  .secondary-toggle-icon{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+    width:32px;
+    height:32px;
+    cursor:pointer;
+    transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+    z-index:5;
+  }
+  .secondary-toggle-icon:hover{
+    transform:scale(1.05);
+  }
+  .secondary-toggle-icon.rotated{
+    transform:rotate(45deg);
+  }
+  .secondary-toggle-icon.rotated:hover{
+    transform:rotate(45deg) scale(1.05);
+  }
+  
+  /* Secondary box expanded state */
+  /* Use a separate class to toggle the solid background color and a separate class to toggle opacity.
+     This lets us keep the solid color in place while fading its opacity out, so the color visibly fades away. */
+  .feature-box--secondary.bg-solid::after{
+    background:#f2f2f2;
+  }
+  .feature-box--secondary.show::after{
+    opacity:1;
+  }
+  
+  /* Text fade transitions */
+  .secondary-text-default{
+    transition:opacity 450ms ease;
+  }
+  .secondary-text-default.hidden{
+    opacity:0;
+  }
+  
+  .secondary-text-alt{
+    position:absolute;
+    top:50%;
+    left:28px;
+    right:60px;
+    transform:translateY(-50%);
+    margin:0;
+    opacity:0;
+    /* no built-in delay here — sequencing is controlled from JS */
+    transition:opacity 450ms ease;
+    text-align:left;
+    z-index:4;
+  }
+  .secondary-text-alt.visible{
+    opacity:1;
+  }
+
+  /* Wide white container for logo loops */
+  .feature-box--wide{background:#FFFFFF;border-radius:18px;padding:36px;min-height:160px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  /* add extra space above wide feature boxes */
+  .feature-box--wide{margin-top:40px}
+  .feature-box--wide .logo-loop{width:calc(100% + 72px);margin:0 -36px;padding:0}
+  .feature-box--wide h2{position:static;align-self:flex-start;margin-bottom:16px}
+  /* helper to left-align items inside centered flex column */
+  .text-link-accent--left{align-self:flex-start;margin-top:16px}
+
+  /* Reset any shadows globally to respect the user's request */
+  *{box-shadow:none!important;text-shadow:none!important}
+  
+  /* Feature box text follows the hierarchy */
+  .feature-box h2{margin:0 0 8px 0}
+  .feature-box p{margin:0}
+  .feature-box--primary{background:linear-gradient(135deg,#A391FA 0%,#147EFC 100%);color:#fff}
+  /* Use GeminiOnGradient image as the primary feature background when available. Include a dark overlay for contrast. */
+  .feature-box--primary{
+    color:#fff;
+    background-color: #147EFC; /* fallback color */
+    background-image: linear-gradient(135deg, rgba(16,12,56,0.6) 0%, rgba(20,126,252,0.4) 100%);
+    position:relative;overflow:hidden;
+    /* Vertically center content, text left-aligned */
+    display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:520px;padding:28px
+  }
+  .feature-box--primary::before{
+    /* background image layer */
+    content:'';
+    position:absolute;
+    inset:0;
+    /* background-image moved to opt-in modifier (.feature-box--gemini) so
+       only intended boxes will show the Gemini image and avoid flashes */
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
+    opacity:1;
+    transform:scale(1.02);
+    z-index:0;
+    filter:contrast(1.02) saturate(1.02);
+  }
+  /* Apply Gemini background only to primary boxes that opt in */
+  .feature-box--primary.feature-box--gemini::before{
+    background-image: url('./images/GeminiOnGradient.png');
+  }
+  /* Variant: use a custom purple gradient image for specific primary boxes */
+  .feature-box--primary.feature-box--purple::before{
+    background-image: url('./images/purpleGradient.png');
+    background-size:cover;
+    background-position:center top;
+  }
+  .feature-box--primary::after{
+    /* dark overlay for text contrast */
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(10,10,12,0.36), rgba(10,10,12,0.36));
+    z-index:1;
+    pointer-events:none;
+  }
+  /* Remove dark overlay for purple variant so image shows at full brightness */
+  .feature-box--primary.feature-box--purple::after{
+    background:transparent;
+    opacity:0;
+    pointer-events:none;
+  }
+  /* Integration mockup background for the smaller feature box */
+  .feature-box--integration{
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+    background-color:#FFF;
+    padding-top:64px;
+    padding-bottom:40px;
+    min-height:auto;
+  }
+  .feature-box--integration::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-image:url('./images/IntergrationMockup.png');
+    background-size:contain;
+    background-position:center bottom 20px;
+    background-repeat:no-repeat;
+    opacity:1;
+    z-index:0;
+  }
+  /* Light gradient overlay for text readability at the top */
+  .feature-box--integration::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:50%;
+    background:linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0) 100%);
+    z-index:1;
+    pointer-events:none;
+  }
+  /* Keep the heading pinned top-left and always visible above overlays/text */
+  .feature-box--integration h2{
+    position:absolute;
+    top:28px;
+    left:28px;
+    margin:0;
+    z-index:6;
+  }
+  .feature-box--integration p{
+    position:relative;
+    z-index:3;
+  }
+  .feature-box--primary *{position:relative;z-index:2}
+
+  /* Primary box (Native and Secure) toggle styles - matching secondary box effect */
+  .feature-box--primary::after{
+    transition:opacity 450ms cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .feature-box--primary.bg-solid::after{
+    background:#9948D6;
+  }
+  .feature-box--primary.show::after{
+    opacity:1;
+  }
+  
+  /* Primary box toggle icon */
+  .primary-toggle-icon{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+    width:32px;
+    height:32px;
+    cursor:pointer;
+    transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+    z-index:5;
+  }
+  .primary-toggle-icon:hover{
+    transform:scale(1.05);
+  }
+  .primary-toggle-icon.rotated{
+    transform:rotate(45deg);
+  }
+  .primary-toggle-icon.rotated:hover{
+    transform:rotate(45deg) scale(1.05);
+  }
+  
+  /* Primary box text fade transitions */
+  .primary-text-default{
+    transition:opacity 450ms ease;
+  }
+  .primary-text-default.hidden{
+    opacity:0;
+  }
+  
+  .primary-text-alt{
+    position:absolute;
+    top:50%;
+    left:28px;
+    right:60px;
+    transform:translateY(-50%);
+    margin:0;
+    opacity:0;
+    transition:opacity 450ms ease;
+    text-align:left;
+    z-index:4;
+  }
+  .primary-text-alt.visible{
+    opacity:1;
+  }
+
+  /* Primary variant: h2 top-left, h1 vertically centered */
+  .feature-box--primary h2{
+    color:#fff;
+    position:absolute;
+    top:28px;
+    left:28px;
+    margin:0;
+  }
+
+  .feature-box--primary h1{
+    color:#fff;
+    margin:0;
+  }
+  .feature-box--primary p{color:rgba(255,255,255,0.95)}
+  /* Responsive adjustments */
+  @media (min-width:1201px){
+    .feature-box--integration{min-height:600px}
+  }
+  @media (max-width:1200px){
+    :root{--page-gap:64px}
+  }
+  @media (max-width:1024px){
+    h1, .section__heading h1{font-size:1.9rem}
+    :root{--page-gap:48px}
+    .feature-box--integration{min-height:520px}
+  }
+  @media (max-width:900px){
+    :root{--page-gap:32px}
+    .feature-box--integration{min-height:580px}
+  }
+  @media (max-width:720px){
+    h1, .section__heading h1, .site-header .site-title{font-size:1.6rem}
+    .features__grid{flex-direction:column}
+    .feature-box{min-height:220px}
+    .feature-box--primary{min-height:360px}
+    .feature-box--primary h2{top:20px;left:20px}
+    .feature-box--integration h2{top:20px;left:20px}
+    .feature-box--integration{min-height:520px}
+    :root{--page-gap:20px}
+  }
+  @media (max-width:520px){
+    :root{--page-gap:12px}
+    .feature-box--integration{min-height:480px}
+  }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="page-hero">
+        <header class="site-header">
+          <div class="eyebrow" style="display:flex;align-items:center;gap:8px;justify-content:center;">
+            <img src="./images/logo.fill.png" alt="Lumen Logo" style="width:20px;height:20px;">
+            Lumen
+          </div>
+          <h1 class="site-title">Yours, truly.</h1>
+          <img class="page-hero__image" src="./images/Website%20Hero.png" alt="Hero image">
+          <p class="site-subtitle">Lumen brings intelligent control to everything you do. Modular by design, it adapts instantly — understanding your words, connecting your tools, and acting the moment you ask.</p>
+          <div style="margin-top:20px">
+            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/08e0c82c82b7430da3eb445b5ef8f5e9" target="_blank" rel="noopener noreferrer">Install Lumen</a>
+          </div>
+        </header>
+      </div>
+  <section class="section" aria-labelledby="intelligence-heading" style="padding-top:32px">
+        <div class="section__heading">
+          <h1 id="intelligence-heading">Intelligence meets Utility.</h1>
+          <p class="section__lead">Built on the Gemini API, Lumen brings intelligence to every interaction. Each module connects seamlessly, letting tools, data, and context flow together effortlessly. It understands, adapts, and extends — giving you an assistant that feels less like software, and more like a natural extension of your workflow.</p>
+          <p style="margin-top:10px"><a class="text-link-accent" href="https://aistudio.google.com/api-keys" target="_blank" rel="noopener noreferrer">Get your Gemini API key</a></p>
+        </div>
+        <div class="features__grid">
+          <div class="feature-box feature-box--primary feature-box--gemini" role="article">
+            <h2>Intelligence at its finest</h2>
+            <h1>Powered by Gemini</h1>
+          </div>
+          <div class="feature-box feature-box--secondary" role="article">
+            <h2>Practical by Design</h2>
+            <p class="secondary-text-default">Modular components that slot into your workflows, giving utility without friction.</p>
+            <p class="secondary-text-alt">The integrations for Lumen were inspired by MCP (Model Context Protocol), announced by Anthropic in 2024. It provides a standardized protocol for connecting LLM's with tools. SMCP for Lumen follows this concept closely, to provide maximum efficiency and practicality.</p>
+            <img src="./images/plus.circle.fill.png" alt="Expand" class="secondary-toggle-icon" role="button" tabindex="0" aria-label="Toggle details">
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__heading">
+          <h1>Endless Possibilities.<br>Literally.</h1>
+        </div>
+        <div class="feature-box feature-box--wide" role="region" aria-label="Partners and Integrations">
+          <h2>Integrations</h2>
+          <p class="section__lead">Thanks to its SMCP-based architecture, each function runs as an independent module — tools can be discovered, connected, or replaced in seconds. From APIs to custom logic, the system grows dynamically, adapting to your needs instead of restricting them.</p>
+          <div class="logo-loop" id="logoLoop" aria-hidden="false">
+            <!-- Layers inserted by JS -->
+          </div>
+          <p class="text-link-accent--left"><a class="text-link-accent" href="https://www.icloud.com/shortcuts/b77dd56a763d4e449957cae3ce2f1abd" target="_blank" rel="noopener noreferrer">Build your own integration</a></p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="builtin-heading">
+        <div class="section__heading">
+          <h1 id="builtin-heading">Built In. Not Bolted On.</h1>
+          <p class="section__lead">Lumen's capabilities are designed into the system core — not awkwardly attached. Features, modules, and integrations are first-class citizens: discoverable, composable, and consistent so the product grows with you without fragile workarounds.</p>
+        </div>
+        <div class="features__grid" style="margin-top:24px">
+          <div class="feature-box feature-box--integration" role="article">
+            <h2>Connected with iOS</h2>
+            <p style="margin-top:12px;color:#86868B">Lumen integrates deeply with iOS, blending right into your everyday flow. Use the Share Sheet to send anything directly to your assistant, or pull in content straight from the clipboard.</p>
+          </div>
+          <div class="feature-box feature-box--primary feature-box--purple" role="article">
+            <h2>Native and Secure</h2>
+            <h1 class="primary-text-default">All inside Shortcuts</h1>
+            <p class="primary-text-alt">Keeping everything inside Shortcuts isn't just a design choice — it's what makes Lumen easy, fast, and endlessly flexible. You can trigger it from anywhere on iOS, connect it with your favorite apps, and build custom tools that work exactly how you want.</p>
+            <img src="./images/plus.circle.fill white.png" alt="Expand" class="primary-toggle-icon" role="button" tabindex="0" aria-label="Toggle details">
+          </div>
+        </div>
+      </section>
+
+      <div class="page-hero" style="min-height:auto;padding: var(--space-xxl) 16px;">
+        <header class="site-header" style="margin-top: -40px;">
+          <div class="eyebrow" style="display:flex;align-items:center;gap:8px;justify-content:center;">
+            <img src="./images/logo.fill.png" alt="Lumen Logo" style="width:20px;height:20px;">
+            Lumen
+          </div>
+          <h1 class="site-title">Yours, truly.</h1>
+          <div style="margin-top:20px">
+            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/08e0c82c82b7430da3eb445b5ef8f5e9" target="_blank" rel="noopener noreferrer">Install Lumen</a>
+          </div>
+        </header>
+      </div>
+
+    </div>
+
+    <footer style="background-color: #F5F5F7; padding: 40px 0; color: #86868B; font-size: var(--body-size);">
+      <div class="footer-inner">
+  <div class="footer-content">
+          <div class="footer-links" style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-bottom:20px;">
+          <!-- External category -->
+          <div class="footer-category">
+            <h3>External</h3>
+            <div class="link-column" style="display:flex;flex-direction:column;gap:6px;">
+              <a class="footer-link" href="https://aistudio.google.com/api-keys" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Get your Gemini API key</a>
+              <a class="footer-link" href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">MCP Docs</a>
+            </div>
+          </div>
+
+          <!-- Shortcuts category column 1 -->
+          <div class="footer-category">
+            <h3>Shortcuts</h3>
+            <div class="link-column" style="display:flex;flex-direction:column;gap:6px;">
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/08e0c82c82b7430da3eb445b5ef8f5e9" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Install Lumen</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/2345863defd64e86b268e5afd43b17d4" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">General Context Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/d1a6d7a4f6364889b5f6f48f51a7a988" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Weather Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/4bbc5766668e4b039e8fc2634c6fc925" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Mail Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/b99177bd71644e11acde79d23b52a733" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Message Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/7fa2ae45a8bc480589a064486f4c55cc" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">WhatsApp Server</a>
+            </div>
+          </div>
+
+          <!-- Shortcuts category column 2 -->
+          <div class="footer-category">
+            <h3 style="visibility:hidden;">Shortcuts</h3>
+            <div class="link-column" style="display:flex;flex-direction:column;gap:6px;">
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/35a3f0b638a241fb85d4617664a66147" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Websearch Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/572c0e0165874b42a9eddfa2c3e61317" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Calendar Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/04e699dd5aed4e4495c1e771c1b84509" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Reminder Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/b0ce9ca6950b42158e51d9da118561db" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Note Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/a004cf4e36ab486cadc8216132e65876" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Notion Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/825f1b336bd94fb5bbca07c66cc59001" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Contacts Server</a>
+            </div>
+          </div>
+
+          <!-- Shortcuts category column 3 -->
+          <div class="footer-category">
+            <h3 style="visibility:hidden;">Shortcuts</h3>
+            <div class="link-column" style="display:flex;flex-direction:column;gap:6px;">
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/e4168ea2c2a247a2889288a977a5ea27" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Sport Events Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/9e57e1bfac5e4d33b9fd3c80b59e1b0e" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Maps Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/1c8c1812c4664e698b69d81156cff60a" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Alarm & Timer Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/0b0b81498e0b4fbca5ab902a865edbf3" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Github Server</a>
+              <a class="footer-link" href="https://www.icloud.com/shortcuts/b77dd56a763d4e449957cae3ce2f1abd" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">SMCP Server Template</a>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // URL mapping for each server image
+      const imageUrlMap = {
+        'General Context Server.svg': 'https://www.icloud.com/shortcuts/2345863defd64e86b268e5afd43b17d4',
+        'Weather Server.svg': 'https://www.icloud.com/shortcuts/d1a6d7a4f6364889b5f6f48f51a7a988',
+        'Mail Server.svg': 'https://www.icloud.com/shortcuts/4bbc5766668e4b039e8fc2634c6fc925',
+        'Message Server.svg': 'https://www.icloud.com/shortcuts/b99177bd71644e11acde79d23b52a733',
+        'WhatsApp Server.svg': 'https://www.icloud.com/shortcuts/7fa2ae45a8bc480589a064486f4c55cc',
+        'Websearch Server.svg': 'https://www.icloud.com/shortcuts/35a3f0b638a241fb85d4617664a66147',
+        'Calendar Server.svg': 'https://www.icloud.com/shortcuts/572c0e0165874b42a9eddfa2c3e61317',
+        'Reminder Server.svg': 'https://www.icloud.com/shortcuts/04e699dd5aed4e4495c1e771c1b84509',
+        'Note Server.svg': 'https://www.icloud.com/shortcuts/b0ce9ca6950b42158e51d9da118561db',
+        'Notion Server.svg': 'https://www.icloud.com/shortcuts/a004cf4e36ab486cadc8216132e65876',
+        'Contacts Server.svg': 'https://www.icloud.com/shortcuts/825f1b336bd94fb5bbca07c66cc59001',
+        'Sport Events Server.svg': 'https://www.icloud.com/shortcuts/e4168ea2c2a247a2889288a977a5ea27',
+        'Maps Server.svg': 'https://www.icloud.com/shortcuts/9e57e1bfac5e4d33b9fd3c80b59e1b0e',
+        'Alarm and Timer Server.svg': 'https://www.icloud.com/shortcuts/1c8c1812c4664e698b69d81156cff60a',
+        'Github Server.svg': 'https://www.icloud.com/shortcuts/0b0b81498e0b4fbca5ab902a865edbf3',
+        'SMCP Server Template.svg': 'https://www.icloud.com/shortcuts/b77dd56a763d4e449957cae3ce2f1abd'
+      };
+
+      // Smooth infinite logo loop with pause-on-hover, based on ReactBits pattern
+      (function(){
+        // Original image list. We'll shuffle this list but exclude any file named lumen.svg (case-insensitive).
+        const images = [
+          'Alarm and Timer Server.svg',
+          'Calendar Server.svg',
+          'Contacts Server.svg',
+          'General Context Server.svg',
+          'Github Server.svg',
+          'Lumen.svg',
+          'Mail Server.svg',
+          'Maps Server.svg',
+          'Message Server.svg',
+          'Note Server.svg',
+          'Notion Server.svg',
+          'Reminder Server.svg',
+          'SMCP Server Template.svg',
+          'Sport Events Server.svg',
+          'Weather Server.svg',
+          'Websearch Server.svg',
+          'WhatsApp Server.svg'
+        ];
+
+        // Helper: case-insensitive check for 'lumen.svg'
+        const isLumen = name => typeof name === 'string' && name.toLowerCase() === 'lumen.svg';
+
+        // Remove lumen.svg from the array to be shuffled
+        const lumenIndex = images.findIndex(isLumen);
+        let lumenName = null;
+        if (lumenIndex !== -1) {
+          lumenName = images.splice(lumenIndex, 1)[0];
+        }
+
+        // Fisher-Yates shuffle to randomize order completely
+        const shuffleArray = (arr) => {
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        };
+
+  // If you still want lumen.svg present but excluded from randomization,
+  // place it at the start of the list (or anywhere deterministic) when building sequences.
+  // We'll keep lumen out of the shuffled list entirely and handle its inclusion when rendering if needed.
+
+        const base = './images/';
+  const gap = 4; // matches CSS --gap (reduced)
+
+        // Global speed multiplier (1 = original speed). Lower to slow down animation.
+  const SPEED_MULTIPLIER = 0.35; // slightly faster than very slow
+
+        const layers = [
+          {class: 'layer--front', speed: 48 * SPEED_MULTIPLIER, direction: 1},   // moves right (positive = right in our coord)
+          {class: 'layer--middle', speed: 36 * SPEED_MULTIPLIER, direction: -1}, // moves left
+          {class: 'layer--back', speed: 32 * SPEED_MULTIPLIER, direction: 1}     // moves right
+        ];
+
+        const container = document.getElementById('logoLoop');
+        const SMOOTH_TAU = 0.25;
+        const MIN_COPIES = 2;
+        const COPY_HEADROOM = 2;
+
+        // Build each layer
+        layers.forEach((layerInfo) => {
+          const layer = document.createElement('div');
+          layer.className = 'layer ' + layerInfo.class;
+
+          const track = document.createElement('div');
+          track.className = 'track';
+
+          let seqWidth = 0;
+          let copyCount = MIN_COPIES;
+          let isHovered = false;
+          let rafId = null;
+          let lastTimestamp = null;
+          let offset = 0;
+          let hasRandomStart = false;
+          let velocity = 0;
+
+          // Target velocity in px/s: speed * direction
+          const targetVelocity = layerInfo.speed * layerInfo.direction;
+
+          // For each layer, create a separate shuffled ordering so each row is randomized independently
+          const rowImages = shuffleArray(images.slice());
+
+          // Build a single sequence of logos
+          const buildSequence = () => {
+            const seq = document.createElement('ul');
+            seq.className = 'logoloop__list';
+            seq.style.display = 'flex';
+            seq.style.alignItems = 'center';
+            seq.style.listStyle = 'none';
+            seq.style.margin = '0';
+            seq.style.padding = '0';
+
+            // Use the per-row shuffled array (lumen removed). Reverse for middle layer to preserve parity
+            (layerInfo.class === 'layer--middle' ? rowImages.slice().reverse() : rowImages).forEach((name, idx) => {
+              const item = document.createElement('li');
+              item.className = 'logo';
+              item.style.marginRight = gap + 'px';
+
+              const img = document.createElement('img');
+              img.src = base + encodeURIComponent(name);
+              img.decoding = 'async';
+              img.alt = name.replace(/\.svg$/i,'');
+              item.appendChild(img);
+              
+              // Add click handler if this image has a corresponding URL
+              if (imageUrlMap[name]) {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  window.open(imageUrlMap[name], '_blank');
+                });
+              }
+              
+              seq.appendChild(item);
+            });
+
+            return seq;
+          };
+
+          // Measure and create copies
+          const updateDimensions = () => {
+            const containerWidth = container.clientWidth || 0;
+            const firstSeq = track.querySelector('.logoloop__list');
+            if (!firstSeq) return;
+
+            const rect = firstSeq.getBoundingClientRect();
+            seqWidth = Math.ceil(rect.width);
+
+            if (seqWidth > 0) {
+              const needed = Math.ceil(containerWidth / seqWidth) + COPY_HEADROOM;
+              copyCount = Math.max(MIN_COPIES, needed);
+
+              // Clear and rebuild copies
+              track.innerHTML = '';
+              for (let i = 0; i < copyCount; i++) {
+                track.appendChild(buildSequence());
+              }
+              // Set a random starting offset once so layers are desynced
+              if (!hasRandomStart) {
+                offset = Math.random() * seqWidth;
+                hasRandomStart = true;
+                // apply initial transform so it's visible before animation starts
+                const translateX = -offset;
+                track.style.transform = `translate3d(${translateX}px, 0, 0)`;
+              }
+            }
+          };
+
+          // Initial build
+          track.appendChild(buildSequence());
+          layer.appendChild(track);
+          container.appendChild(layer);
+
+          // Wait for images to load, then measure
+          const imgs = track.querySelectorAll('img');
+          let remaining = imgs.length;
+          const onImageLoad = () => {
+            remaining--;
+            if (remaining === 0) {
+              updateDimensions();
+              startAnimation();
+            }
+          };
+
+          imgs.forEach(img => {
+            if (img.complete) {
+              onImageLoad();
+            } else {
+              img.addEventListener('load', onImageLoad, {once: true});
+              img.addEventListener('error', onImageLoad, {once: true});
+            }
+          });
+
+          // Hover handlers
+          layer.addEventListener('mouseenter', () => { isHovered = true; });
+          layer.addEventListener('mouseleave', () => { isHovered = false; });
+
+          // Animation loop
+          const animate = (timestamp) => {
+            if (lastTimestamp === null) {
+              lastTimestamp = timestamp;
+            }
+
+            const deltaTime = Math.max(0, timestamp - lastTimestamp) / 1000;
+            lastTimestamp = timestamp;
+
+            // Smooth velocity interpolation
+            const target = isHovered ? 0 : targetVelocity;
+            const easingFactor = 1 - Math.exp(-deltaTime / SMOOTH_TAU);
+            velocity += (target - velocity) * easingFactor;
+
+            // Update offset with wrapping for infinite loop
+            if (seqWidth > 0) {
+              offset += velocity * deltaTime;
+              offset = ((offset % seqWidth) + seqWidth) % seqWidth;
+
+              const translateX = -offset;
+              track.style.transform = `translate3d(${translateX}px, 0, 0)`;
+            }
+
+            rafId = requestAnimationFrame(animate);
+          };
+
+          const startAnimation = () => {
+            if (rafId === null) {
+              rafId = requestAnimationFrame(animate);
+            }
+          };
+
+          // Resize observer
+          if (window.ResizeObserver) {
+            const resizeObs = new ResizeObserver(() => {
+              updateDimensions();
+            });
+            resizeObs.observe(container);
+            resizeObs.observe(layer);
+          } else {
+            window.addEventListener('resize', updateDimensions);
+          }
+        });
+      })();
+
+      // Secondary box toggle interaction
+      (function(){
+        const secondaryBox = document.querySelector('.feature-box--secondary');
+        const toggleIcon = document.querySelector('.secondary-toggle-icon');
+        const textDefault = document.querySelector('.secondary-text-default');
+        const textAlt = document.querySelector('.secondary-text-alt');
+        
+        if (!toggleIcon || !secondaryBox || !textDefault || !textAlt) return;
+        
+        let isExpanded = false;
+        let toggleTimer = null;
+  const BG_FADE_MS = 450; // unified fade duration (matches CSS)
+  const ALT_FADE_MS = 450; // unified fade duration (matches CSS)
+
+        const clearToggleTimers = () => {
+          if (toggleTimer) { clearTimeout(toggleTimer); toggleTimer = null }
+        };
+
+        const toggle = () => {
+          isExpanded = !isExpanded;
+
+          // Toggle icon rotation
+          toggleIcon.classList.toggle('rotated', isExpanded);
+
+          // Clear any pending timers
+          clearToggleTimers();
+
+          if (isExpanded) {
+            // SHOW sequence: make solid color present, then fade its opacity in
+            secondaryBox.classList.add('bg-solid');
+            // small tick to ensure class is applied before starting opacity transition
+            requestAnimationFrame(() => secondaryBox.classList.add('show'));
+
+            // Fade out default text immediately
+            textDefault.classList.add('hidden');
+
+            // After the background fade completes, fade in alt text
+            toggleTimer = setTimeout(() => {
+              textAlt.classList.add('visible');
+              toggleTimer = null;
+            }, BG_FADE_MS + 20);
+          } else {
+            // COLLAPSE sequence: hide alt text immediately so it fades out
+            textAlt.classList.remove('visible');
+
+            // At the same moment we start fading the overlay opacity out, reveal the default text so it appears to come from behind
+            textDefault.classList.remove('hidden');
+            secondaryBox.classList.remove('show');
+
+            // After the BG_FADE_MS finishes (overlay fully faded), remove the bg-solid class
+            toggleTimer = setTimeout(() => {
+              secondaryBox.classList.remove('bg-solid');
+              toggleTimer = null;
+            }, BG_FADE_MS + 20);
+          }
+        };
+        
+        toggleIcon.addEventListener('click', toggle);
+        toggleIcon.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+          }
+        });
+      })();
+
+      // Primary box (Native and Secure) toggle interaction - exact same effect as secondary
+      (function(){
+        const primaryBox = document.querySelector('.feature-box--primary.feature-box--purple');
+        const toggleIcon = document.querySelector('.primary-toggle-icon');
+        const textDefault = document.querySelector('.primary-text-default');
+        const textAlt = document.querySelector('.primary-text-alt');
+        
+        if (!toggleIcon || !primaryBox || !textDefault || !textAlt) return;
+        
+        let isExpanded = false;
+        let toggleTimer = null;
+        const BG_FADE_MS = 450; // unified fade duration (matches CSS)
+        const ALT_FADE_MS = 450; // unified fade duration (matches CSS)
+
+        const clearToggleTimers = () => {
+          if (toggleTimer) { clearTimeout(toggleTimer); toggleTimer = null }
+        };
+
+        const toggle = () => {
+          isExpanded = !isExpanded;
+
+          // Toggle icon rotation
+          toggleIcon.classList.toggle('rotated', isExpanded);
+
+          // Clear any pending timers
+          clearToggleTimers();
+
+          if (isExpanded) {
+            // SHOW sequence: make solid color present, then fade its opacity in
+            primaryBox.classList.add('bg-solid');
+            // small tick to ensure class is applied before starting opacity transition
+            requestAnimationFrame(() => primaryBox.classList.add('show'));
+
+            // Fade out default text immediately
+            textDefault.classList.add('hidden');
+
+            // After the background fade completes, fade in alt text
+            toggleTimer = setTimeout(() => {
+              textAlt.classList.add('visible');
+              toggleTimer = null;
+            }, BG_FADE_MS + 20);
+          } else {
+            // COLLAPSE sequence: hide alt text immediately so it fades out
+            textAlt.classList.remove('visible');
+
+            // At the same moment we start fading the overlay opacity out, reveal the default text so it appears to come from behind
+            textDefault.classList.remove('hidden');
+            primaryBox.classList.remove('show');
+
+            // After the BG_FADE_MS finishes (overlay fully faded), remove the bg-solid class
+            toggleTimer = setTimeout(() => {
+              primaryBox.classList.remove('bg-solid');
+              toggleTimer = null;
+            }, BG_FADE_MS + 20);
+          }
+        };
+        
+        toggleIcon.addEventListener('click', toggle);
+        toggleIcon.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
