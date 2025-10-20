@@ -39,7 +39,13 @@
 
   /* Base layout + type scale (keeps the original rem base so existing sizes remain proportional) */
   html{font-size:27px}
-  html,body{height:100%;margin:0;font-family:var(--body-font);background:#FAFAFA;color:var(--text-color)}
+  html,body{height:100%;margin:0;font-family:var(--body-font);background:#FAFAFA;color:var(--text-color);
+    /* Prevent browsers (Safari/iOS) from synthesizing bold/italic when a weight isn't available */
+    font-synthesis: none;
+    /* Improve text rendering on WebKit and macOS browsers */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   body{line-height:1.45}
   .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 var(--page-gap)}
 
@@ -135,7 +141,7 @@
   /* ensure smaller feature boxes also have spacing above them to match the wide box */
   .features__grid > .feature-box{margin-top:40px}
   /* Make boxes taller and use flex so we can vertically center content in the primary box */
-  .feature-box{flex:1;background:#FFFFFF;border-radius:18px;padding:28px;border:none;display:flex;flex-direction:column;justify-content:flex-start}
+  .feature-box{flex:1;background:#FFFFFF;border-radius:18px;padding:30px;border:none;display:flex;flex-direction:column;justify-content:flex-start}
   /* Keep aspect ratio for small boxes (not wide or primary) - taller vertical ratio */
   .feature-box:not(.feature-box--wide):not(.feature-box--primary):not(.feature-box--integration){aspect-ratio:3/4;min-height:340px}
   /* Make the last row boxes (integration and native) less tall, but let integration extend when needed */
@@ -145,7 +151,7 @@
   .feature-box--secondary{
     position:relative;overflow:hidden;border-radius:18px;background-color:#FFF;
     /* ensure flow content sits below the pinned subheading; nudged down slightly */
-    padding-top:64px;
+    padding-top:66px;
   }
   .feature-box--secondary::before{
     content:'';position:absolute;inset:0;background-image:url('./images/ToolsIcons.png');background-size:cover;background-position:center bottom;background-repeat:no-repeat;opacity:1;z-index:0;filter:contrast(1.02) saturate(1.02);transform:scale(1.02)
@@ -154,13 +160,13 @@
   /* default inner content should sit underneath the overlay so it can appear from behind as the overlay fades */
   .feature-box--secondary *{position:relative;z-index:1}
   /* Keep the subheading pinned top-left and always visible above overlays/text */
-  .feature-box--secondary h2{position:absolute;top:28px;left:28px;margin:0;z-index:6}
+  .feature-box--secondary h2{position:absolute;top:30px;left:30px;margin:0;z-index:6}
   
   /* Secondary box toggle icon */
   .secondary-toggle-icon{
     position:absolute;
-    bottom:20px;
-    right:20px;
+    bottom:30px;
+    right:30px;
     width:32px;
     height:32px;
     cursor:pointer;
@@ -198,8 +204,8 @@
   .secondary-text-alt{
     position:absolute;
     top:50%;
-    left:28px;
-    right:60px;
+    left:30px;
+    right:70px;
     transform:translateY(-50%);
     margin:0;
     opacity:0;
@@ -213,10 +219,10 @@
   }
 
   /* Wide white container for logo loops */
-  .feature-box--wide{background:#FFFFFF;border-radius:18px;padding:36px;min-height:160px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .feature-box--wide{background:#FFFFFF;border-radius:18px;padding:30px;min-height:160px;display:flex;flex-direction:column;justify-content:center;align-items:center}
   /* add extra space above wide feature boxes */
   .feature-box--wide{margin-top:40px}
-  .feature-box--wide .logo-loop{width:calc(100% + 72px);margin:0 -36px;padding:0}
+  .feature-box--wide .logo-loop{width:calc(100% + 60px);margin:0 -30px;padding:0}
   .feature-box--wide h2{position:static;align-self:flex-start;margin-bottom:16px}
   /* helper to left-align items inside centered flex column */
   .text-link-accent--left{align-self:flex-start;margin-top:16px}
@@ -239,7 +245,7 @@
     background-image: linear-gradient(135deg, rgba(16,12,56,0.6) 0%, rgba(20,126,252,0.4) 100%);
     position:relative;overflow:hidden;
     /* Vertically center content, text left-aligned */
-    display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:520px;padding:28px
+    display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:520px;padding:30px;padding-top:86px
   }
   .feature-box--primary::before{
     /* background image layer */
@@ -287,8 +293,8 @@
     overflow:hidden;
     border-radius:18px;
     background-color:#FFF;
-    padding-top:64px;
-    padding-bottom:40px;
+    padding-top:66px;
+    padding-bottom:30px;
     min-height:auto;
   }
   .feature-box--integration::before{
@@ -320,8 +326,8 @@
   /* Keep the heading pinned top-left and always visible above overlays/text */
   .feature-box--integration h2{
     position:absolute;
-    top:28px;
-    left:28px;
+    top:30px;
+    left:30px;
     margin:0;
     z-index:6;
   }
@@ -345,8 +351,8 @@
   /* Primary box toggle icon */
   .primary-toggle-icon{
     position:absolute;
-    bottom:20px;
-    right:20px;
+    bottom:30px;
+    right:30px;
     width:32px;
     height:32px;
     cursor:pointer;
@@ -374,8 +380,8 @@
   .primary-text-alt{
     position:absolute;
     top:50%;
-    left:28px;
-    right:60px;
+    left:30px;
+    right:70px;
     transform:translateY(-50%);
     margin:0;
     opacity:0;
@@ -391,8 +397,8 @@
   .feature-box--primary h2{
     color:#fff;
     position:absolute;
-    top:28px;
-    left:28px;
+    top:30px;
+    left:30px;
     margin:0;
   }
 
@@ -401,6 +407,7 @@
     margin:0 0 12px 0;
   }
   .feature-box--primary p{color:rgba(255,255,255,0.95);margin:0}
+  .feature-box--primary{padding:30px}
   /* Responsive adjustments */
   @media (min-width:1201px){
     .feature-box--integration{min-height:600px}
@@ -420,19 +427,24 @@
   @media (max-width:720px){
     h1, .section__heading h1, .site-header .site-title{font-size:1.6rem}
     .features__grid{flex-direction:column}
-    .feature-box{min-height:220px;padding:20px}
-    .feature-box--primary{min-height:480px;padding:28px;padding-top:80px}
-    .feature-box--primary h2{top:28px;left:28px}
-    .feature-box--secondary{padding:20px;padding-top:64px}
-    .feature-box--secondary h2{top:20px;left:20px}
-    .feature-box--integration{min-height:520px;padding:20px;padding-top:64px}
-    .feature-box--integration h2{top:20px;left:20px}
+    .feature-box{min-height:220px;padding:30px}
+    .feature-box--wide{padding:30px}
+    .feature-box--wide .logo-loop{width:calc(100% + 60px);margin:0 -30px}
+    .feature-box--primary{min-height:260px;padding:30px;padding-top:86px}
+    .feature-box--primary h2{top:30px;left:30px}
+    .feature-box--secondary{padding:30px;padding-top:66px}
+    .feature-box--secondary h2{top:30px;left:30px}
+    .feature-box--integration{min-height:540px;padding:30px;padding-top:66px}
+    .feature-box--integration h2{top:30px;left:30px}
+    .secondary-toggle-icon{bottom:30px;right:30px}
+    .primary-toggle-icon{bottom:30px;right:30px}
     :root{--page-gap:20px}
   }
   @media (max-width:520px){
     :root{--page-gap:12px}
-    .feature-box--primary{min-height:720px;padding-top:80px}
-    .feature-box--integration{min-height:480px}
+    .feature-box--primary{min-height:540px;padding:30px;padding-top:86px}
+    .feature-box--primary h2{top:30px;left:30px}
+    .feature-box--integration{min-height:500px}
   }
     </style>
   </head>
@@ -498,7 +510,7 @@
           </div>
           <div class="feature-box feature-box--primary feature-box--purple" role="article">
             <h2>Native and Secure</h2>
-            <h1 class="primary-text-default">All inside Shortcuts</h1>
+            <h1 class="primary-text-default">All inside<br>Shortcuts</h1>
             <p class="primary-text-alt">Keeping everything inside Shortcuts isn't just a design choice — it's what makes Lumen easy, fast, and endlessly flexible. You can trigger it from anywhere on iOS, connect it with your favorite apps, and build custom tools that work exactly how you want.</p>
             <img src="./images/plus.circle.fill-white.png" alt="Expand" class="primary-toggle-icon" role="button" tabindex="0" aria-label="Toggle details">
           </div>
