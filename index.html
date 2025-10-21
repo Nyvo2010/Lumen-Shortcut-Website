@@ -449,6 +449,7 @@
     </style>
   </head>
   <body>
+    <style>body{padding-bottom:10px}</style>
     <div class="wrap">
       <div class="page-hero">
         <header class="site-header">
@@ -460,7 +461,7 @@
           <img class="page-hero__image" src="./images/Website%20Hero.png" alt="Hero image">
           <p class="site-subtitle">Lumen brings intelligent control to everything you do. Modular by design, it adapts instantly — understanding your words, connecting your tools, and acting the moment you ask.</p>
           <div style="margin-top:20px">
-            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" target="_blank" rel="noopener noreferrer">Install Lumen</a>
+            <a class="btn btn--primary install-link" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" data-fallback-href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" target="_blank" rel="noopener noreferrer">Install Lumen</a>
           </div>
         </header>
       </div>
@@ -525,7 +526,7 @@
           </div>
           <h1 class="site-title">Yours, truly.</h1>
           <div style="margin-top:20px">
-            <a class="btn btn--primary" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" target="_blank" rel="noopener noreferrer">Install Lumen</a>
+            <a class="btn btn--primary install-link" aria-label="Install Lumen" href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" data-fallback-href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" target="_blank" rel="noopener noreferrer">Install Lumen</a>
           </div>
         </header>
       </div>
@@ -549,7 +550,7 @@
           <div class="footer-category">
             <h3>Shortcuts</h3>
             <div class="link-column" style="display:flex;flex-direction:column;gap:6px;">
-              <a class="footer-link" href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Install Lumen</a>
+              <a class="footer-link install-link" href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" data-fallback-href="https://www.icloud.com/shortcuts/3fe91ba698d649a59fdf5b272fa9aa1a" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Install Lumen</a>
               <a class="footer-link" href="https://www.icloud.com/shortcuts/2345863defd64e86b268e5afd43b17d4" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">General Context Server</a>
               <a class="footer-link" href="https://www.icloud.com/shortcuts/d1a6d7a4f6364889b5f6f48f51a7a988" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Weather Server</a>
               <a class="footer-link" href="https://www.icloud.com/shortcuts/4bbc5766668e4b039e8fc2634c6fc925" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Mail Server</a>
@@ -584,8 +585,18 @@
           </div>
           </div>
         </div>
-      </div>
+          </div>
+        </div>
     </footer>
+    <div style="text-align:center;padding:16px 0;color:#86868B;font-family:var(--body-font);font-size:calc(var(--body-size) * 0.85);">
+      <a href="https://www.reddit.com/user/Repulsive-Machine706/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+        <span>Created by Nyvø</span>
+        <span style="width:18px;height:18px;border-radius:50%;overflow:hidden;display:inline-block;flex:0 0 18px;">
+          <img src="./images/pfp.png" alt="Nyvø profile" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </span>
+      </a>
+    </div>
+
 
     <script>
       // URL mapping for each server image
@@ -964,6 +975,83 @@
             toggle();
           }
         });
+      })();
+
+      // Dynamic Install URL loader
+      (function(){
+        const GIST_RAW_URL = 'https://gist.githubusercontent.com/Nyvo2010/008544bca032371146146d7be5444e85/raw/Lumen%20Version';
+        const SELECTOR = '.install-link';
+
+        // Safe JSON fetch with timeout
+        function fetchWithTimeout(url, timeout = 5000) {
+          return new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error('Timeout while fetching ' + url)), timeout);
+            fetch(url, {cache: 'no-cache'}).then(res => {
+              clearTimeout(timer);
+              if (!res.ok) return reject(new Error('Network response was not ok'));
+              return res.text();
+            }).then(text => resolve(text)).catch(err => {
+              clearTimeout(timer);
+              reject(err);
+            });
+          });
+        }
+
+        async function updateInstallLinks(){
+          const anchors = Array.from(document.querySelectorAll(SELECTOR));
+          if (!anchors.length) return;
+
+          try {
+            const raw = await fetchWithTimeout(GIST_RAW_URL, 5000);
+            // The gist may contain JSON or whitespace; attempt to parse safely
+            const trimmed = raw.trim();
+            let data = null;
+            try { data = JSON.parse(trimmed); } catch (e) {
+              // Try to extract a JSON object from surrounding text
+              const firstBrace = trimmed.indexOf('{');
+              const lastBrace = trimmed.lastIndexOf('}');
+              if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+                const jsonSub = trimmed.slice(firstBrace, lastBrace + 1);
+                try { data = JSON.parse(jsonSub); } catch (e2) { data = null; }
+              }
+            }
+
+            const installUrl = data && (data.installUrl || data.install_url || data.install); // flexible keys
+
+            if (installUrl && typeof installUrl === 'string' && installUrl.trim()) {
+              anchors.forEach(a => {
+                a.setAttribute('href', installUrl);
+                // ensure open in new tab
+                a.setAttribute('target','_blank');
+                a.setAttribute('rel','noopener noreferrer');
+              });
+              console.info('Install links updated from gist:', installUrl);
+              return;
+            } else {
+              console.warn('Gist fetched but no installUrl found; leaving fallback hrefs in place.');
+            }
+
+          } catch (err) {
+            console.warn('Could not fetch install URL from gist:', err);
+          }
+
+          // If we reach here, leave fallbacks as-is but ensure hrefs exist
+          anchors.forEach(a => {
+            if (!a.getAttribute('href')) {
+              const fallback = a.getAttribute('data-fallback-href');
+              if (fallback) a.setAttribute('href', fallback);
+            }
+          });
+        }
+
+        // Run on DOMContentLoaded (script is at bottom but keep safe) and whenever the window regains focus
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', updateInstallLinks, {once:true});
+        } else {
+          updateInstallLinks();
+        }
+        // Refresh when user focuses the window (useful for long-lived pages)
+        window.addEventListener('focus', () => { updateInstallLinks().catch(()=>{}); });
       })();
     </script>
   </body>
